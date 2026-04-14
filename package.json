@@ -3,5 +3,5 @@
   "version": "1.0.0",
   "description": "Buscador de vagas remotas globais com análise de compatibilidade por IA",
   "private": true,
-  "engines": { "node": "18.x" }
+  "engines": { "node": "24.x" }
 }
