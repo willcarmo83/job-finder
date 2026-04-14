@@ -7,70 +7,46 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { query = 'product manager', chips = '', ltype = '1' } = req.query;
+  const { chips = '', ltype = '1' } = req.query;
   const serpKey = process.env.SERP_API_KEY;
 
   async function searchGoogleJobs(q) {
-    const url = new URL('https://serpapi.com/search');
-    url.searchParams.set('engine', 'google_jobs');
-    url.searchParams.set('q', q + ' remote');
-    url.searchParams.set('ltype', ltype);
-    url.searchParams.set('hl', 'en');
-    if (chips) url.searchParams.set('chips', chips);
-    url.searchParams.set('api_key', serpKey);
-    const r = await fetch(url.toString());
-    const d = await r.json();
-    return (d.jobs_results || []).map(j => ({
-      titulo: j.title,
-      empresa: j.company_name,
-      local: j.location,
-      regime: j.detected_extensions?.schedule_type || 'Full-time',
-      salario: j.detected_extensions?.salary || null,
-      publicado_em: j.detected_extensions?.posted_at || null,
-      descricao: j.description?.slice(0, 800) || '',
-      url: j.apply_options?.[0]?.link || j.share_link || '#',
-      fonte: 'Google Jobs',
-      extensions: j.detected_extensions || {}
-    }));
-  }
-
-  async function searchLinkedIn(q) {
-    const url = new URL('https://serpapi.com/search');
-    url.searchParams.set('engine', 'linkedin_jobs');
-    url.searchParams.set('keywords', q);
-    url.searchParams.set('location', 'Worldwide');
-    url.searchParams.set('f_WT', '2');
-    url.searchParams.set('api_key', serpKey);
-    const r = await fetch(url.toString());
-    const d = await r.json();
-    return (d.jobs || []).map(j => ({
-      titulo: j.title,
-      empresa: j.company,
-      local: j.location || 'Remote',
-      regime: 'Full-time',
-      salario: null,
-      publicado_em: j.ago || null,
-      descricao: j.description?.slice(0, 800) || '',
-      url: j.link || '#',
-      fonte: 'LinkedIn',
-      extensions: {}
-    }));
+    try {
+      const url = new URL('https://serpapi.com/search');
+      url.searchParams.set('engine', 'google_jobs');
+      url.searchParams.set('q', q);
+      url.searchParams.set('ltype', ltype);
+      url.searchParams.set('hl', 'en');
+      if (chips) url.searchParams.set('chips', chips);
+      url.searchParams.set('api_key', serpKey);
+      const r = await fetch(url.toString());
+      const text = await r.text();
+      const d = JSON.parse(text);
+      return (d.jobs_results || []).map(j => ({
+        titulo: j.title,
+        empresa: j.company_name,
+        local: j.location,
+        regime: j.detected_extensions?.schedule_type || 'Full-time',
+        salario: j.detected_extensions?.salary || null,
+        publicado_em: j.detected_extensions?.posted_at || null,
+        descricao: j.description?.slice(0, 800) || '',
+        url: j.apply_options?.[0]?.link || j.share_link || '#',
+        fonte: 'Google Jobs',
+        extensions: j.detected_extensions || {}
+      }));
+    } catch(e) {
+      console.error('Google Jobs error:', q, e.message);
+      return [];
+    }
   }
 
   try {
-    const [googlePM, googlePO, linkedinPM, linkedinPO] = await Promise.allSettled([
-      searchGoogleJobs('product manager'),
-      searchGoogleJobs('product owner remote'),
-      searchLinkedIn('product manager remote'),
-      searchLinkedIn('product owner remote')
+    const [resPM, resPO] = await Promise.all([
+      searchGoogleJobs('product manager remote'),
+      searchGoogleJobs('product owner remote')
     ]);
 
-    let allJobs = [
-      ...(googlePM.status === 'fulfilled' ? googlePM.value : []),
-      ...(googlePO.status === 'fulfilled' ? googlePO.value : []),
-      ...(linkedinPM.status === 'fulfilled' ? linkedinPM.value : []),
-      ...(linkedinPO.status === 'fulfilled' ? linkedinPO.value : []),
-    ];
+    let allJobs = [...resPM, ...resPO];
 
     const seen = new Set();
     allJobs = allJobs.filter(j => {
@@ -83,7 +59,7 @@ export default async function handler(req, res) {
     allJobs = allJobs.slice(0, 20);
 
     if (allJobs.length === 0) {
-      return res.status(200).json({ jobs: [], total: 0 });
+      return res.status(200).json({ jobs: [], total: 0, fontes: [] });
     }
 
     const anthropicKey = process.env.ANTHROPIC_API_KEY;
