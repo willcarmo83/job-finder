@@ -185,7 +185,7 @@ async function buscar() {
   try {
     const params = new URLSearchParams({ query });
     if (chips) params.set('chips', chips);
-    const res = await fetch(`/api/jobs?${params}`);
+    const res = await fetch(`/api/jobs.js?${params}`);
     const data2 = await res.json();
 
     if (data2.error) throw new Error(data2.error);
