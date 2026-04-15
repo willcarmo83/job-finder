@@ -1,4 +1,3 @@
-// api/search.js - busca vagas via SerpAPI
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -10,7 +9,7 @@ export default async function handler(req, res) {
 
   const queries = [
     'product manager remote',
-    'product owner remote'
+    'product manager remoto brasil'
   ];
 
   try {
@@ -34,7 +33,6 @@ export default async function handler(req, res) {
 
     let jobs = results.flat();
 
-    // Remove duplicatas
     const seen = new Set();
     jobs = jobs.filter(j => {
       const key = `${j.titulo?.toLowerCase()}|${j.empresa?.toLowerCase()}`;
