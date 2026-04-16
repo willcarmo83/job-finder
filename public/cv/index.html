@@ -3,1247 +3,374 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CV Job Finder — Encontre vagas com IA</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<title>CV Job Finder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Bricolage+Grotesque:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #13131a;
-    --surface2: #1c1c27;
-    --border: #2a2a38;
-    --accent: #6c63ff;
-    --accent2: #ff6584;
-    --accent3: #43e97b;
-    --text: #e8e8f0;
-    --text-muted: #7070a0;
-    --text-dim: #404060;
-    --radius: 16px;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Background grid */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(108,99,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(108,99,255,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 20px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Header */
-  header {
-    padding: 48px 0 40px;
-    text-align: center;
-  }
-
-  .logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-
-  .logo-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-  }
-
-  .logo-text {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    letter-spacing: -0.5px;
-  }
-
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -1.5px;
-    margin-bottom: 16px;
-  }
-
-  h1 span {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .subtitle {
-    font-size: 17px;
-    color: var(--text-muted);
-    max-width: 480px;
-    margin: 0 auto;
-    line-height: 1.6;
-    font-weight: 300;
-  }
-
-  /* Steps */
-  .steps {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin: 32px 0;
-    flex-wrap: wrap;
-  }
-
-  .step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--text-dim);
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    transition: all 0.3s;
-  }
-
-  .step.active {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: rgba(108,99,255,0.08);
-  }
-
-  .step.done {
-    color: var(--accent3);
-    border-color: var(--accent3);
-    background: rgba(67,233,123,0.06);
-  }
-
-  .step-num {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .step.active .step-num { background: var(--accent); color: white; }
-  .step.done .step-num { background: var(--accent3); color: #0a0a0f; }
-
-  /* Card */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px;
-    margin-bottom: 20px;
-    transition: border-color 0.2s;
-  }
-
-  .card:hover { border-color: rgba(108,99,255,0.3); }
-
-  .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text);
-  }
-
-  .card-title .icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: rgba(108,99,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-  }
-
-  /* Upload area */
-  .upload-area {
-    border: 2px dashed var(--border);
-    border-radius: 12px;
-    padding: 40px 24px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    margin-bottom: 16px;
-  }
-
-  .upload-area:hover, .upload-area.dragover {
-    border-color: var(--accent);
-    background: rgba(108,99,255,0.05);
-  }
-
-  .upload-area input[type=file] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-  }
-
-  .upload-icon { font-size: 36px; margin-bottom: 12px; }
-  .upload-label { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
-  .upload-hint { font-size: 13px; color: var(--text-muted); }
-
-  .upload-success {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    background: rgba(67,233,123,0.08);
-    border: 1px solid rgba(67,233,123,0.2);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 14px;
-    color: var(--accent3);
-    margin-bottom: 16px;
-  }
-
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 16px 0;
-    color: var(--text-dim);
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  textarea {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-    resize: vertical;
-    min-height: 140px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  textarea:focus { border-color: var(--accent); }
-  textarea::placeholder { color: var(--text-dim); }
-
-  /* Buttons */
-  .btn-primary {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, var(--accent), #8b83ff);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.3px;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(108,99,255,0.3); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-
-  .btn-secondary {
-    padding: 10px 20px;
-    background: var(--surface2);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* Profile card */
-  .profile-card {
-    background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(255,101,132,0.05));
-    border: 1px solid rgba(108,99,255,0.2);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-  }
-
-  .profile-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
-  .profile-name {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    margin-bottom: 4px;
-  }
-
-  .profile-summary {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-
-  /* Suggestions */
-  .suggestions-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-  }
-
-  .suggestion-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
-
-  .suggestion-item:hover { border-color: rgba(108,99,255,0.4); }
-  .suggestion-item.selected { border-color: var(--accent); background: rgba(108,99,255,0.08); }
-
-  .suggestion-check {
-    width: 22px;
-    height: 22px;
-    border-radius: 6px;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
-    margin-top: 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-
-  .suggestion-item.selected .suggestion-check {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-
-  .suggestion-item.selected .suggestion-check::after {
-    content: '✓';
-    color: white;
-    font-size: 12px;
-    font-weight: 700;
-  }
-
-  .suggestion-cargo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 4px;
-  }
-
-  .suggestion-motivo {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-
-  /* Search type toggle */
-  .search-type-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .btn-type {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    background: var(--surface2);
-    color: var(--text-muted);
-    transition: all 0.2s;
-    text-align: center;
-  }
-
-  .btn-type.active {
-    background: rgba(108,99,255,0.12);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  /* Results */
-  .results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .results-count {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-  }
-
-  .results-meta {
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-
-  /* Job card */
-  .job-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 10px;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .job-card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--border);
-    transition: background 0.2s;
-  }
-
-  .job-card:hover { border-color: rgba(108,99,255,0.3); }
-  .job-card:hover::before { background: var(--accent); }
-  .job-card.analyzed-high::before { background: var(--accent3); }
-  .job-card.analyzed-mid::before { background: #ffd93d; }
-  .job-card.analyzed-low::before { background: var(--accent2); }
-
-  .job-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-
-  .job-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    cursor: pointer;
-    line-height: 1.3;
-    transition: color 0.2s;
-  }
-
-  .job-title:hover { color: var(--accent); }
-
-  .job-company {
-    font-size: 13px;
-    color: var(--text-muted);
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-top: 3px;
-  }
-
-  .job-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-
-  .score-badge {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 14px;
-    padding: 4px 12px;
-    border-radius: 99px;
-  }
-
-  .score-high { background: rgba(67,233,123,0.12); color: var(--accent3); border: 1px solid rgba(67,233,123,0.2); }
-  .score-mid { background: rgba(255,217,61,0.1); color: #ffd93d; border: 1px solid rgba(255,217,61,0.2); }
-  .score-low { background: rgba(255,101,132,0.1); color: var(--accent2); border: 1px solid rgba(255,101,132,0.2); }
-
-  .btn-analyze {
-    font-size: 12px;
-    padding: 5px 12px;
-    background: rgba(108,99,255,0.1);
-    color: var(--accent);
-    border: 1px solid rgba(108,99,255,0.2);
-    border-radius: 99px;
-    cursor: pointer;
-    font-weight: 600;
-    white-space: nowrap;
-    transition: all 0.2s;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .btn-analyze:hover { background: rgba(108,99,255,0.2); }
-  .btn-analyze:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .score-bar {
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 10px 0 8px;
-    overflow: hidden;
-  }
-
-  .score-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.8s ease;
-  }
-
-  .job-meta {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .job-meta span { font-size: 12px; color: var(--text-muted); }
-
-  .tag {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 99px;
-    font-weight: 500;
-  }
-
-  .tag-green { background: rgba(67,233,123,0.1); color: var(--accent3); }
-  .tag-yellow { background: rgba(255,217,61,0.1); color: #ffd93d; }
-  .tag-gray { background: rgba(255,255,255,0.05); color: var(--text-muted); }
-  .tag-purple { background: rgba(108,99,255,0.1); color: var(--accent); }
-  .tag-pink { background: rgba(255,101,132,0.1); color: var(--accent2); }
-
-  .desc-preview {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-top: 8px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    cursor: pointer;
-    line-height: 1.6;
-  }
-
-  .job-detail {
-    margin-top: 16px;
-    border-top: 1px solid var(--border);
-    padding-top: 16px;
-    display: none;
-  }
-
-  .job-card.expanded .job-detail { display: block; }
-
-  .detail-label {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
-
-  .detail-section { margin-bottom: 14px; }
-
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-
-  .chip {
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 99px;
-  }
-
-  .chip-match { background: rgba(67,233,123,0.1); color: var(--accent3); border: 1px solid rgba(67,233,123,0.15); }
-  .chip-gap { background: rgba(255,101,132,0.1); color: var(--accent2); border: 1px solid rgba(255,101,132,0.15); }
-
-  .detail-text {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.7;
-  }
-
-  .rec-label {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 99px;
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .rec-sim { background: rgba(67,233,123,0.12); color: var(--accent3); }
-  .rec-talvez { background: rgba(255,217,61,0.1); color: #ffd93d; }
-  .rec-nao { background: rgba(255,101,132,0.1); color: var(--accent2); }
-
-  .btn-apply {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 14px;
-    font-size: 13px;
-    color: var(--accent);
-    background: rgba(108,99,255,0.1);
-    text-decoration: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 600;
-    border: 1px solid rgba(108,99,255,0.2);
-    transition: all 0.2s;
-  }
-
-  .btn-apply:hover { background: rgba(108,99,255,0.2); }
-
-  /* States */
-  .loading-state {
-    text-align: center;
-    padding: 48px 24px;
-  }
-
-  .spinner {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin-bottom: 16px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    color: var(--text-muted);
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 48px 24px;
-    border: 1px dashed var(--border);
-    border-radius: var(--radius);
-  }
-
-  .empty-icon { font-size: 40px; margin-bottom: 12px; }
-
-  .empty-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .empty-desc { font-size: 14px; color: var(--text-muted); }
-
-  .error-state {
-    background: rgba(255,101,132,0.06);
-    border: 1px solid rgba(255,101,132,0.2);
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-  }
-
-  .error-title { color: var(--accent2); font-weight: 700; margin-bottom: 8px; }
-  .error-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
-
-  /* Sections */
-  .section { display: none; }
-  .section.active { display: block; }
-
-  /* Fade in */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .fade-up { animation: fadeUp 0.4s ease forwards; }
-
-  /* Search tabs */
-  .search-tabs {
-    display: flex;
-    gap: 4px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 4px;
-    margin-bottom: 20px;
-  }
-
-  .search-tab {
-    flex: 1;
-    padding: 8px;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 500;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--text-muted);
-    border: none;
-    background: none;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .search-tab.active {
-    background: var(--surface);
-    color: var(--text);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-  }
-
-  footer {
-    text-align: center;
-    padding: 32px 0 48px;
-    color: var(--text-dim);
-    font-size: 13px;
-  }
-
-  @media (max-width: 600px) {
-    h1 { font-size: 28px; }
-    .steps { gap: 6px; }
-    .step { font-size: 12px; padding: 5px 10px; }
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f7f5;--white:#fff;--border:#e4e2de;--border2:#c8c5bf;
+  --text:#1a1916;--text2:#6b6860;--text3:#a09e9a;
+  --green:#1a6b4a;--green-bg:#f0f7f4;--green-border:#b8ddd0;
+  --amber:#8a5c00;--amber-bg:#fef9ec;
+  --red:#c0392b;--red-bg:#fdf0ef;
+  --r:10px;--rl:14px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.5}
+.wrap{max-width:660px;margin:0 auto;padding:0 20px 64px}
+.header{padding:52px 0 44px;text-align:center}
+.logo{display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;color:var(--text2)}
+.logo-dot{width:7px;height:7px;background:var(--green);border-radius:50%}
+h1{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(26px,5vw,40px);font-weight:700;letter-spacing:-1px;line-height:1.15;margin-bottom:12px}
+.sub{font-size:16px;color:var(--text2);font-weight:300;max-width:400px;margin:0 auto;line-height:1.65}
+.prog{display:flex;align-items:center;justify-content:center;margin:32px 0 0}
+.ps{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text3);padding:5px 13px;border-radius:99px;transition:all .2s}
+.ps.on{color:var(--green);background:var(--green-bg);font-weight:500}
+.ps.done{color:var(--text2)}
+.pn{width:17px;height:17px;border-radius:50%;background:var(--border);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.ps.on .pn{background:var(--green);color:#fff}
+.ps.done .pn{background:var(--text2);color:#fff}
+.pl{width:20px;height:1px;background:var(--border)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:26px;margin-bottom:14px}
+.ch{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:18px}
+.drop{border:1.5px dashed var(--border2);border-radius:var(--r);padding:34px 20px;text-align:center;cursor:pointer;position:relative;transition:all .2s;margin-bottom:18px}
+.drop:hover,.drop.ov{border-color:var(--green);background:var(--green-bg)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.di{width:38px;height:38px;border-radius:9px;background:var(--bg);border:1px solid var(--border);margin:0 auto 10px;display:flex;align-items:center;justify-content:center}
+.di svg{width:17px;height:17px;stroke:var(--text2);fill:none;stroke-width:1.5}
+.dt{font-size:14px;font-weight:500;margin-bottom:3px}
+.ds{font-size:13px;color:var(--text3)}
+.fok{display:none;align-items:center;gap:9px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--r);padding:11px 14px;margin-bottom:18px}
+.fok-n{font-size:13px;font-weight:500;color:var(--green);flex:1}
+.fok-x{font-size:12px;color:var(--text3);cursor:pointer;padding:3px 8px;border-radius:6px;border:1px solid var(--border);background:var(--white)}
+.fok-x:hover{border-color:var(--border2);color:var(--text)}
+.div{display:flex;align-items:center;gap:10px;margin:2px 0 18px;color:var(--text3);font-size:12px}
+.div::before,.div::after{content:'';flex:1;height:1px;background:var(--border)}
+textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:13px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;resize:vertical;min-height:110px;outline:none;transition:border .15s}
+textarea:focus{border-color:var(--green)}
+textarea::placeholder{color:var(--text3)}
+.btn{width:100%;padding:12px;background:var(--text);color:#fff;border:none;border-radius:var(--r);font-family:'Inter',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{background:#2d2c29;transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-g{width:auto;background:none;color:var(--text2);border:1px solid var(--border);font-size:13px;padding:8px 14px;border-radius:var(--r);cursor:pointer;font-family:'Inter',sans-serif;font-weight:400;transition:all .15s}
+.btn-g:hover{background:var(--bg);color:var(--text);border-color:var(--border2)}
+.prof{display:flex;align-items:flex-start;gap:14px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px;margin-bottom:14px}
+.pav{width:42px;height:42px;border-radius:9px;background:var(--text);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;flex-shrink:0}
+.pname{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;margin-bottom:4px}
+.psumm{font-size:13px;color:var(--text2);line-height:1.6}
+.si{border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;cursor:pointer;transition:all .2s;display:flex;gap:13px;align-items:flex-start;background:var(--white)}
+.si:hover{border-color:var(--border2)}
+.si.sel{border-color:var(--green);background:var(--green-bg)}
+.sc{width:19px;height:19px;border-radius:5px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.si.sel .sc{background:var(--green);border-color:var(--green)}
+.scm{display:none;width:10px;height:8px}
+.scm path{stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.si.sel .scm{display:block}
+.stt{font-weight:500;font-size:14px;margin-bottom:2px}
+.swh{font-size:13px;color:var(--text2);line-height:1.5}
+.tabs{display:flex;gap:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:3px;margin-bottom:18px}
+.tab{flex:1;padding:7px;text-align:center;font-size:13px;border-radius:7px;cursor:pointer;transition:all .2s;color:var(--text2);border:none;background:none;font-family:'Inter',sans-serif;font-weight:400}
+.tab.on{background:var(--white);color:var(--text);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.rbar{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.rcount{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:600}
+.rsub{font-size:12px;color:var(--text3);margin-top:2px}
+.jc{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:17px 19px;margin-bottom:9px;transition:border .15s;position:relative;overflow:hidden}
+.jc::after{content:'';position:absolute;left:0;top:10px;bottom:10px;width:2px;background:transparent;border-radius:0 2px 2px 0;transition:background .2s}
+.jc:hover{border-color:var(--border2)}
+.jc.hi::after{background:var(--green)}
+.jc.mi::after{background:var(--amber)}
+.jc.lo::after{background:var(--red)}
+.jt{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:7px}
+.jtitle{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;cursor:pointer;line-height:1.3;transition:color .15s}
+.jtitle:hover{color:var(--green)}
+.jcomp{font-size:13px;color:var(--text2);display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.jright{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.score{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:13px;padding:3px 10px;border-radius:99px}
+.s-hi{background:#e8f4f0;color:var(--green)}
+.s-mi{background:var(--amber-bg);color:var(--amber)}
+.s-lo{background:var(--red-bg);color:var(--red)}
+.bta{font-size:12px;padding:4px 11px;background:var(--bg);color:var(--text2);border:1px solid var(--border);border-radius:99px;cursor:pointer;font-weight:400;white-space:nowrap;transition:all .15s;font-family:'Inter',sans-serif}
+.bta:hover{border-color:var(--border2);color:var(--text)}
+.bta:disabled{opacity:.4;cursor:not-allowed}
+.bar{height:2px;background:var(--border);border-radius:2px;margin:9px 0 7px;overflow:hidden}
+.bf{height:100%;border-radius:2px;transition:width .6s ease}
+.jmeta{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.jmeta span{font-size:12px;color:var(--text2)}
+.pill{font-size:11px;padding:2px 7px;border-radius:99px;font-weight:500}
+.p-g{background:#e8f4f0;color:var(--green)}
+.p-a{background:var(--amber-bg);color:var(--amber)}
+.p-gr{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
+.p-b{background:#eef3fb;color:#2c5fa3}
+.p-r{background:var(--red-bg);color:var(--red)}
+.dprev{font-size:13px;color:var(--text3);margin-top:7px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;line-height:1.6}
+.det{margin-top:14px;border-top:1px solid var(--border);padding-top:14px;display:none}
+.jc.open .det{display:block}
+.dl{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px}
+.dd{margin-bottom:13px}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.c-g{font-size:12px;padding:3px 9px;border-radius:99px;background:#e8f4f0;color:var(--green);border:1px solid var(--green-border)}
+.c-r{font-size:12px;padding:3px 9px;border-radius:99px;background:var(--red-bg);color:var(--red);border:1px solid #f5c6c5}
+.dt2{font-size:13px;color:var(--text2);line-height:1.7}
+.rec{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;margin-bottom:5px}
+.r-g{background:#e8f4f0;color:var(--green)}
+.r-a{background:var(--amber-bg);color:var(--amber)}
+.r-r{background:var(--red-bg);color:var(--red)}
+.abtn{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-size:13px;color:var(--text);background:var(--bg);text-decoration:none;border-radius:var(--r);padding:7px 13px;font-weight:500;border:1px solid var(--border);transition:all .15s}
+.abtn:hover{border-color:var(--border2);background:var(--white)}
+.loading{text-align:center;padding:48px 20px}
+.spin{display:inline-block;width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:sp .7s linear infinite;margin-bottom:10px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.lt{font-size:14px;color:var(--text2)}
+.empty{text-align:center;padding:44px 20px;border:1px dashed var(--border);border-radius:var(--rl)}
+.et{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:600;margin-bottom:5px}
+.es{font-size:13px;color:var(--text2)}
+.sec{display:none}
+.sec.on{display:block}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.up{animation:up .3s ease forwards}
 </style>
 </head>
 <body>
-
-<div class="container">
-  <header>
-    <div class="logo">
-      <div class="logo-icon">🎯</div>
-      <div class="logo-text">CV Job Finder</div>
+<div class="wrap">
+  <div class="header">
+    <div class="logo"><div class="logo-dot"></div>CV Job Finder</div>
+    <h1>Vagas feitas<br>para o seu perfil</h1>
+    <p class="sub">Envie seu currículo, receba sugestões personalizadas e encontre oportunidades compatíveis com você.</p>
+    <div class="prog">
+      <div class="ps on" id="s1"><div class="pn">1</div>CV</div>
+      <div class="pl"></div>
+      <div class="ps" id="s2"><div class="pn">2</div>Sugestões</div>
+      <div class="pl"></div>
+      <div class="ps" id="s3"><div class="pn">3</div>Vagas</div>
+      <div class="pl"></div>
+      <div class="ps" id="s4"><div class="pn">4</div>Análise</div>
     </div>
-    <h1>Encontre vagas <span>feitas para você</span></h1>
-    <p class="subtitle">Cole seu CV, a IA analisa seu perfil e sugere as melhores buscas. Depois filtre as vagas que mais combinam com você.</p>
-
-    <div class="steps">
-      <div class="step active" id="step1"><span class="step-num">1</span> Enviar CV</div>
-      <div class="step" id="step2"><span class="step-num">2</span> Ver sugestões</div>
-      <div class="step" id="step3"><span class="step-num">3</span> Buscar vagas</div>
-      <div class="step" id="step4"><span class="step-num">4</span> Analisar fit</div>
-    </div>
-  </header>
-
-  <!-- SECTION 1: Upload CV -->
-  <div class="section active fade-up" id="sec-upload">
-    <div class="card">
-      <div class="card-title">
-        <div class="icon">📄</div>
-        Envie seu currículo
-      </div>
-
-      <div class="upload-area" id="upload-area">
-        <input type="file" id="cv-file" accept=".pdf,.txt,.doc,.docx" onchange="handleFile(event)">
-        <div class="upload-icon">📎</div>
-        <div class="upload-label">Arraste seu CV aqui ou clique para selecionar</div>
-        <div class="upload-hint">PDF, TXT, DOC — até 5MB</div>
-      </div>
-
-      <div class="upload-success" id="upload-success">
-        <span>✅</span>
-        <span id="upload-filename">arquivo.pdf carregado</span>
-        <button class="btn-secondary" onclick="clearFile()" style="margin-left:auto">Remover</button>
-      </div>
-
-      <div class="divider">ou cole o texto</div>
-
-      <textarea id="cv-text" placeholder="Cole aqui o texto do seu currículo...&#10;&#10;Experiências, habilidades, formação, certificações..." rows="6"></textarea>
-    </div>
-
-    <button class="btn-primary" id="btn-analyze-cv" onclick="analisarCV()">
-      <span>✨</span> Analisar meu perfil
-    </button>
   </div>
 
-  <!-- SECTION 2: Suggestions -->
-  <div class="section" id="sec-suggestions">
-    <div id="profile-container"></div>
-
-    <div class="card fade-up">
-      <div class="card-title">
-        <div class="icon">💡</div>
-        Vagas sugeridas para você
+  <div class="sec on up" id="p1">
+    <div class="card">
+      <div class="ch">Seu currículo</div>
+      <div class="drop" id="dropz">
+        <input type="file" id="cv-file" accept=".pdf,.txt,.docx" onchange="handleFile(event)">
+        <div class="di"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+        <div class="dt">Arraste ou clique para enviar</div>
+        <div class="ds">PDF, TXT, DOCX — até 5MB</div>
       </div>
+      <div class="fok" id="fok">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1a6b4a" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="fok-n" id="fname"></span>
+        <span class="fok-x" onclick="clearFile()">Remover</span>
+      </div>
+      <div class="div">ou cole o texto</div>
+      <textarea id="cv-text" rows="5" placeholder="Cole aqui o conteúdo do seu currículo — experiências, habilidades, formação..."></textarea>
+    </div>
+    <button class="btn" id="btn-cv" onclick="analisarCV()">Analisar meu perfil</button>
+  </div>
 
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">Selecione as buscas que quer realizar:</p>
-
-      <div id="suggestions-list"></div>
-
-      <!-- Search type -->
-      <div style="margin-top:20px">
-        <div class="suggestions-title">Tipo de busca</div>
-        <div class="search-tabs">
-          <button class="search-tab active" id="tab-int" onclick="setSearchType('internacional')">🌎 Internacional (Remote)</button>
-          <button class="search-tab" id="tab-br" onclick="setSearchType('brasil')">🇧🇷 Brasil (Remoto)</button>
+  <div class="sec" id="p2">
+    <div id="profbox"></div>
+    <div class="card up">
+      <div class="ch">Cargos sugeridos para você</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Selecione os cargos que deseja buscar:</p>
+      <div id="suglist"></div>
+      <div style="margin-top:18px">
+        <div class="ch">Onde buscar</div>
+        <div class="tabs">
+          <button class="tab on" id="ti" onclick="setType('int')">🌎 Internacional (Remote)</button>
+          <button class="tab" id="tb" onclick="setType('br')">🇧🇷 Brasil (Remoto)</button>
         </div>
       </div>
-
-      <button class="btn-primary" id="btn-search" onclick="buscarVagas()">
-        <span>🔍</span> Buscar vagas selecionadas
-      </button>
+      <button class="btn" id="btn-s" onclick="buscarVagas()">Buscar vagas selecionadas</button>
     </div>
-
-    <button class="btn-secondary" onclick="voltarUpload()" style="margin-bottom:20px">← Novo CV</button>
+    <button class="btn-g" onclick="goTo('p1',1)" style="margin-bottom:14px">← Novo currículo</button>
   </div>
 
-  <!-- SECTION 3: Results -->
-  <div class="section" id="sec-results">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
-      <div>
-        <div id="results-title" style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800"></div>
-        <div id="results-subtitle" style="font-size:13px;color:var(--text-muted);margin-top:2px"></div>
-      </div>
-      <button class="btn-secondary" onclick="voltarSugestoes()">← Voltar</button>
+  <div class="sec" id="p3">
+    <div class="rbar">
+      <div><div class="rcount" id="rc"></div><div class="rsub" id="rs"></div></div>
+      <button class="btn-g" onclick="goTo('p2',2)">← Voltar</button>
     </div>
-
-    <div id="results-container"></div>
+    <div id="jobsbox"></div>
   </div>
 </div>
 
-<footer>
-  CV Job Finder · Powered by Claude AI + Google Jobs
-</footer>
-
 <script>
-// State
-let cvText = '';
-let sugestoes = [];
-let selectedSugestoes = [];
-let searchType = 'internacional';
-let allJobs = [];
-let cvNome = '';
+let cvText='',sugestoes=[],selected=[],sType='int',jobs=[],nome='';
 
-// --- FILE HANDLING ---
-function handleFile(e) {
-  const file = e.target.files[0];
-  if (!file) return;
+const dz=document.getElementById('dropz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('ov')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('ov'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('ov');const f=e.dataTransfer.files[0];if(f){document.getElementById('cv-file').files=e.dataTransfer.files;handleFile({target:{files:[f]}});}});
 
-  document.getElementById('upload-filename').textContent = file.name + ' carregado';
-  document.getElementById('upload-success').style.display = 'flex';
-  document.getElementById('upload-area').style.display = 'none';
-
-  if (file.type === 'application/pdf') {
-    readPDF(file);
-  } else {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      cvText = ev.target.result;
-      document.getElementById('cv-text').value = cvText;
-    };
-    reader.readAsText(file);
-  }
+function handleFile(e){
+  const f=e.target.files[0];if(!f)return;
+  document.getElementById('fname').textContent=f.name;
+  document.getElementById('fok').style.display='flex';
+  document.getElementById('dropz').style.display='none';
+  if(f.type==='application/pdf')readPDF(f);
+  else{const r=new FileReader();r.onload=ev=>{cvText=ev.target.result;document.getElementById('cv-text').value=cvText;};r.readAsText(f);}
 }
 
-async function readPDF(file) {
-  const reader = new FileReader();
-  reader.onload = async (ev) => {
-    const base64 = ev.target.result.split(',')[1];
-    document.getElementById('btn-analyze-cv').innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;margin:0"></span> Lendo PDF...';
-    document.getElementById('btn-analyze-cv').disabled = true;
-
-    try {
-      const res = await fetch('/api/cv-read-pdf.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ base64, mediaType: 'application/pdf' })
-      });
-
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      cvText = data.text || '';
-      document.getElementById('cv-text').value = cvText;
-    } catch(e) {
-      alert('Erro ao ler PDF: ' + e.message + '\nTente colar o texto manualmente.');
-    }
-
-    document.getElementById('btn-analyze-cv').innerHTML = '<span>✨</span> Analisar meu perfil';
-    document.getElementById('btn-analyze-cv').disabled = false;
+async function readPDF(f){
+  const btn=document.getElementById('btn-cv');
+  btn.disabled=true;btn.textContent='Lendo PDF...';
+  const r=new FileReader();
+  r.onload=async ev=>{
+    try{
+      const res=await fetch('/api/cv-read-pdf.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({base64:ev.target.result.split(',')[1],mediaType:'application/pdf'})});
+      const d=await res.json();
+      if(d.error)throw new Error(d.error);
+      cvText=d.text||'';
+      document.getElementById('cv-text').value=cvText;
+    }catch(e){alert('Erro ao ler PDF: '+e.message+'\nTente colar o texto.');}
+    btn.disabled=false;btn.textContent='Analisar meu perfil';
   };
-  reader.readAsDataURL(file);
+  r.readAsDataURL(f);
 }
 
-function clearFile() {
-  document.getElementById('cv-file').value = '';
-  document.getElementById('upload-success').style.display = 'none';
-  document.getElementById('upload-area').style.display = 'block';
-  cvText = '';
+function clearFile(){
+  document.getElementById('cv-file').value='';
+  document.getElementById('fok').style.display='none';
+  document.getElementById('dropz').style.display='block';
+  cvText='';
 }
 
-// --- ANALYZE CV ---
-async function analisarCV() {
-  const textareaVal = document.getElementById('cv-text').value.trim();
-  if (!cvText && textareaVal) cvText = textareaVal;
-  if (!cvText || cvText.length < 50) {
-    alert('Por favor, envie seu CV ou cole o texto antes de continuar.');
-    return;
-  }
-
-  const btn = document.getElementById('btn-analyze-cv');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;margin:0"></span> Analisando seu perfil...';
-
-  try {
-    const res = await fetch('/api/cv-analyze-cv.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cvText })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-
-    cvNome = data.nome || 'Candidato';
-    sugestoes = data.sugestoes || [];
-
-    renderProfile(data);
-    renderSugestoes();
-    showSection('sec-suggestions');
-    setStep(2);
-
-  } catch(e) {
-    alert('Erro ao analisar CV: ' + e.message);
-  }
-
-  btn.disabled = false;
-  btn.innerHTML = '<span>✨</span> Analisar meu perfil';
+async function analisarCV(){
+  const tv=document.getElementById('cv-text').value.trim();
+  if(!cvText&&tv)cvText=tv;
+  if(!cvText||cvText.length<50){alert('Envie seu CV ou cole o texto antes de continuar.');return;}
+  const btn=document.getElementById('btn-cv');
+  btn.disabled=true;btn.innerHTML='<div class="spin" style="width:15px;height:15px;border-width:1.5px;margin:0"></div> Analisando...';
+  try{
+    const res=await fetch('/api/cv-analyze-cv.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cvText})});
+    const d=await res.json();
+    if(d.error)throw new Error(d.error);
+    nome=d.nome||'Candidato';sugestoes=d.sugestoes||[];
+    renderProf(d);renderSugs();goTo('p2',2);
+  }catch(e){alert('Erro: '+e.message);}
+  btn.disabled=false;btn.textContent='Analisar meu perfil';
 }
 
-function renderProfile(data) {
-  const initials = data.nome?.split(' ').slice(0,2).map(n => n[0]).join('').toUpperCase() || '??';
-  document.getElementById('profile-container').innerHTML = `
-    <div class="profile-card fade-up">
-      <div class="profile-avatar">${initials}</div>
-      <div>
-        <div class="profile-name">${data.nome || 'Candidato'}</div>
-        <div class="profile-summary">${data.resumo || ''}</div>
-      </div>
-    </div>`;
+function renderProf(d){
+  const ini=(d.nome||'?').split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase();
+  document.getElementById('profbox').innerHTML=`<div class="prof up"><div class="pav">${ini}</div><div><div class="pname">${d.nome||'Candidato'}</div><div class="psumm">${d.resumo||''}</div></div></div>`;
 }
 
-function renderSugestoes() {
-  const list = document.getElementById('suggestions-list');
-  list.innerHTML = sugestoes.map((s, i) => `
-    <div class="suggestion-item" id="sug-${i}" onclick="toggleSugestao(${i})">
-      <div class="suggestion-check"></div>
-      <div>
-        <div class="suggestion-cargo">${s.cargo}</div>
-        <div class="suggestion-motivo">${s.motivo}</div>
-      </div>
-    </div>
-  `).join('');
-
-  // Select all by default
-  sugestoes.forEach((_, i) => toggleSugestao(i));
+function renderSugs(){
+  document.getElementById('suglist').innerHTML=sugestoes.map((s,i)=>`
+    <div class="si" id="si${i}" onclick="togSug(${i})">
+      <div class="sc"><svg class="scm" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6"/></svg></div>
+      <div><div class="stt">${s.cargo}</div><div class="swh">${s.motivo}</div></div>
+    </div>`).join('');
+  sugestoes.forEach((_,i)=>togSug(i));
 }
 
-function toggleSugestao(i) {
-  const el = document.getElementById('sug-' + i);
-  el.classList.toggle('selected');
-  selectedSugestoes = sugestoes.filter((_, idx) =>
-    document.getElementById('sug-' + idx)?.classList.contains('selected')
-  );
+function togSug(i){
+  document.getElementById('si'+i)?.classList.toggle('sel');
+  selected=sugestoes.filter((_,j)=>document.getElementById('si'+j)?.classList.contains('sel'));
 }
 
-// --- SEARCH ---
-function setSearchType(type) {
-  searchType = type;
-  document.getElementById('tab-int').classList.toggle('active', type === 'internacional');
-  document.getElementById('tab-br').classList.toggle('active', type === 'brasil');
+function setType(t){
+  sType=t;
+  document.getElementById('ti').classList.toggle('on',t==='int');
+  document.getElementById('tb').classList.toggle('on',t==='br');
 }
 
-async function buscarVagas() {
-  if (!selectedSugestoes.length) {
-    alert('Selecione pelo menos uma sugestão de vaga.');
-    return;
-  }
-
-  const btn = document.getElementById('btn-search');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;margin:0"></span> Buscando...';
-
-  showSection('sec-results');
-  setStep(3);
-
-  const totalLabel = selectedSugestoes.length === 1 ? '1 tipo de vaga' : `${selectedSugestoes.length} tipos de vagas`;
-  document.getElementById('results-title').textContent = `Vagas para ${cvNome}`;
-  document.getElementById('results-subtitle').textContent = `Buscando ${totalLabel} — ${searchType === 'brasil' ? '🇧🇷 Brasil' : '🌎 Internacional'}`;
-  document.getElementById('results-container').innerHTML = `
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <div class="loading-text">Buscando vagas no Google Jobs...</div>
-    </div>`;
-
-  try {
-    const queries = selectedSugestoes.map(s =>
-      searchType === 'brasil' ? s.query_brasil : s.query_internacional
-    );
-
-    const results = await Promise.all(queries.map(q =>
-      fetch(`/api/cv-search.js?query=${encodeURIComponent(q)}&type=${searchType}`)
-        .then(r => r.json())
-        .then(d => d.jobs || [])
-        .catch(() => [])
-    ));
-
-    allJobs = results.flat();
-
-    // Remove duplicates
-    const seen = new Set();
-    allJobs = allJobs.filter(j => {
-      const key = `${j.titulo?.toLowerCase()}|${j.empresa?.toLowerCase()}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-
-    document.getElementById('results-subtitle').textContent =
-      `${allJobs.length} vagas encontradas — ${searchType === 'brasil' ? '🇧🇷 Brasil' : '🌎 Internacional'} · clique 🤖 para analisar compatibilidade`;
-
+async function buscarVagas(){
+  if(!selected.length){alert('Selecione pelo menos um cargo.');return;}
+  const btn=document.getElementById('btn-s');
+  btn.disabled=true;btn.innerHTML='<div class="spin" style="width:15px;height:15px;border-width:1.5px;margin:0"></div> Buscando...';
+  goTo('p3',3);
+  const type=sType==='int'?'internacional':'brasil';
+  document.getElementById('rc').textContent='Buscando...';
+  document.getElementById('rs').textContent='';
+  document.getElementById('jobsbox').innerHTML='<div class="loading"><div class="spin"></div><div class="lt">Consultando Google Jobs...</div></div>';
+  try{
+    const qs=selected.map(s=>sType==='br'?s.query_brasil:s.query_internacional);
+    const res=await Promise.all(qs.map(q=>fetch(`/api/cv-search.js?query=${encodeURIComponent(q)}&type=${type}`).then(r=>r.json()).then(d=>d.jobs||[]).catch(()=>[])));
+    jobs=res.flat();
+    const seen=new Set();
+    jobs=jobs.filter(j=>{const k=`${j.titulo?.toLowerCase()}|${j.empresa?.toLowerCase()}`;if(seen.has(k))return false;seen.add(k);return true;});
+    document.getElementById('rc').textContent=`${jobs.length} vagas encontradas`;
+    document.getElementById('rs').textContent=(sType==='br'?'🇧🇷 Brasil':'🌎 Internacional')+' · clique em "Analisar" para ver compatibilidade';
     renderJobs();
-  } catch(e) {
-    document.getElementById('results-container').innerHTML = `
-      <div class="error-state">
-        <div class="error-title">❌ Erro ao buscar vagas</div>
-        <div class="error-desc">${e.message}</div>
-        <button class="btn-secondary" onclick="buscarVagas()">↻ Tentar novamente</button>
-      </div>`;
+  }catch(e){
+    document.getElementById('jobsbox').innerHTML=`<div style="text-align:center;padding:32px"><p style="color:var(--red);margin-bottom:12px">Erro ao buscar vagas</p><button class="btn-g" onclick="buscarVagas()">Tentar novamente</button></div>`;
   }
-
-  btn.disabled = false;
-  btn.innerHTML = '<span>🔍</span> Buscar vagas selecionadas';
+  btn.disabled=false;btn.textContent='Buscar vagas selecionadas';
 }
 
-function renderJobs() {
-  const container = document.getElementById('results-container');
-
-  if (!allJobs.length) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">😕</div>
-        <div class="empty-title">Nenhuma vaga encontrada</div>
-        <div class="empty-desc">Tente selecionar outros tipos de vaga ou mudar o tipo de busca.</div>
-      </div>`;
-    return;
-  }
-
-  container.innerHTML = allJobs.map((v, i) => {
-    const a = v.analise;
-    const score = a?.score;
-    const sc = score == null ? '' : score >= 80 ? 'score-high' : score >= 65 ? 'score-mid' : 'score-low';
-    const cardClass = score == null ? '' : score >= 80 ? 'analyzed-high' : score >= 65 ? 'analyzed-mid' : 'analyzed-low';
-    const fill = score || 0;
-    const fillColor = score >= 80 ? '#43e97b' : score >= 65 ? '#ffd93d' : '#ff6584';
-    const matchHtml = (a?.matches || []).map(m => `<span class="chip chip-match">${m}</span>`).join('');
-    const gapHtml = (a?.gaps || []).map(g => `<span class="chip chip-gap">${g}</span>`).join('');
-    const recClass = a?.recomendacao?.toLowerCase().includes('vale') ? 'rec-sim' : a?.recomendacao?.toLowerCase().includes('considerar') ? 'rec-talvez' : 'rec-nao';
-    const tipoTag = v.tipo === 'brasil'
-      ? '<span class="tag tag-pink">🇧🇷 Brasil</span>'
-      : '<span class="tag tag-purple">🌎 Internacional</span>';
-
-    return `<div class="job-card ${cardClass}" id="card-${i}">
-      <div class="job-top">
+function renderJobs(){
+  if(!jobs.length){document.getElementById('jobsbox').innerHTML='<div class="empty"><div class="et">Nenhuma vaga encontrada</div><div class="es">Tente outros cargos ou mude o tipo de busca.</div></div>';return;}
+  document.getElementById('jobsbox').innerHTML=jobs.map((v,i)=>{
+    const a=v.analise,sc=a?.score;
+    const cls=sc==null?'':sc>=80?'hi':sc>=65?'mi':'lo';
+    const sb=sc==null?'':sc>=80?'s-hi':sc>=65?'s-mi':'s-lo';
+    const fc=sc>=80?'#1a6b4a':sc>=65?'#8a5c00':'#c0392b';
+    const mH=(a?.matches||[]).map(m=>`<span class="c-g">${m}</span>`).join('');
+    const gH=(a?.gaps||[]).map(g=>`<span class="c-r">${g}</span>`).join('');
+    const rCls=a?.recomendacao?.toLowerCase().includes('vale')?'r-g':a?.recomendacao?.toLowerCase().includes('considerar')?'r-a':'r-r';
+    const tp=v.tipo==='brasil'?'<span class="pill p-r">Brasil</span>':'<span class="pill p-b">Internacional</span>';
+    const dp=v.publicado_em?`<span class="pill ${v.publicado_em.includes('day')||v.publicado_em.includes('hour')?'p-g':v.publicado_em.includes('week')?'p-a':'p-gr'}">${v.publicado_em}</span>`:'';
+    return `<div class="jc ${cls}" id="jc${i}">
+      <div class="jt">
         <div style="flex:1">
-          <div class="job-title" onclick="toggle(${i})">${v.titulo}</div>
-          <div class="job-company">
-            <span>${v.empresa}</span>
-            ${tipoTag}
-            ${v.salario ? `<span class="tag tag-green">💰 ${v.salario}</span>` : ''}
-          </div>
+          <div class="jtitle" onclick="tog(${i})">${v.titulo}</div>
+          <div class="jcomp">${v.empresa} ${tp} ${v.salario?`<span class="pill p-g">${v.salario}</span>`:''}</div>
         </div>
-        <div class="job-right">
-          ${score != null ? `<span class="score-badge ${sc}">${score}%</span>` : ''}
-          <button class="btn-analyze" id="btn-analyze-${i}" onclick="analisarVaga(${i})" ${score != null ? 'disabled' : ''}>
-            ${score != null ? '✅ Analisado' : '🤖 Analisar'}
-          </button>
+        <div class="jright">
+          ${sc!=null?`<span class="score ${sb}">${sc}%</span>`:''}
+          <button class="bta" id="ba${i}" onclick="analyze(${i})" ${sc!=null?'disabled':''}>${sc!=null?'Analisado':'Analisar'}</button>
         </div>
       </div>
-      ${score != null ? `<div class="score-bar"><div class="score-fill" style="width:${fill}%;background:${fillColor}"></div></div>` : ''}
-      <div class="job-meta">
-        <span>📍 ${v.local || 'Remoto'}</span>
-        <span>💼 ${v.regime}</span>
-        ${v.publicado_em ? `<span class="tag ${v.publicado_em.includes('day') || v.publicado_em.includes('hour') ? 'tag-green' : v.publicado_em.includes('week') ? 'tag-yellow' : 'tag-gray'}">🗓 ${v.publicado_em}</span>` : ''}
-      </div>
-      ${v.descricao ? `<div class="desc-preview" onclick="toggle(${i})">${v.descricao.slice(0,160)}...</div>` : ''}
-      <div class="job-detail" id="detail-${i}" style="display:none">
-        ${a ? `
-        <div class="detail-section">
-          <div class="detail-label">✅ O que você tem</div>
-          <div class="chips">${matchHtml}</div>
-        </div>
-        ${a.gaps?.length ? `<div class="detail-section"><div class="detail-label">⚠️ Gaps</div><div class="chips">${gapHtml}</div></div>` : ''}
-        <div class="detail-section">
-          <div class="detail-label">Recomendação</div>
-          <span class="rec-label ${recClass}">${a.recomendacao}</span>
-          <p class="detail-text">${a.justificativa}</p>
-        </div>
-        ${a.dica ? `<div class="detail-section"><div class="detail-label">💡 Como se destacar</div><p class="detail-text">${a.dica}</p></div>` : ''}
-        ` : ''}
-        ${v.descricao ? `<div class="detail-section"><div class="detail-label">Descrição</div><p class="detail-text">${v.descricao}</p></div>` : ''}
-        <a href="${v.url}" class="btn-apply" target="_blank" rel="noopener">🚀 Ver vaga e candidatar</a>
+      ${sc!=null?`<div class="bar"><div class="bf" style="width:${sc||0}%;background:${fc}"></div></div>`:''}
+      <div class="jmeta"><span>${v.local||'Remoto'}</span><span>${v.regime}</span>${dp}</div>
+      ${v.descricao?`<div class="dprev" onclick="tog(${i})">${v.descricao.slice(0,150)}...</div>`:''}
+      <div class="det" id="jd${i}">
+        ${a?`<div class="dd"><div class="dl">Compatibilidades</div><div class="chips">${mH}</div></div>${a.gaps?.length?`<div class="dd"><div class="dl">Gaps</div><div class="chips">${gH}</div></div>`:''}<div class="dd"><div class="dl">Recomendação</div><span class="rec ${rCls}">${a.recomendacao}</span><p class="dt2">${a.justificativa}</p></div>${a.dica?`<div class="dd"><div class="dl">Como se destacar</div><p class="dt2">${a.dica}</p></div>`:''}`:''}
+        ${v.descricao?`<div class="dd"><div class="dl">Descrição</div><p class="dt2">${v.descricao}</p></div>`:''}
+        <a href="${v.url}" class="abtn" target="_blank" rel="noopener">Ver vaga e candidatar →</a>
       </div>
     </div>`;
   }).join('');
 }
 
-function toggle(i) {
-  const card = document.getElementById('card-' + i);
-  const detail = document.getElementById('detail-' + i);
-  if (!card || !detail) return;
-  const isOpen = detail.style.display === 'block';
-  detail.style.display = isOpen ? 'none' : 'block';
-  card.classList.toggle('expanded', !isOpen);
+function tog(i){
+  const c=document.getElementById('jc'+i),d=document.getElementById('jd'+i);
+  if(!c||!d)return;
+  const o=d.style.display==='block';
+  d.style.display=o?'none':'block';
+  c.classList.toggle('open',!o);
 }
 
-async function analisarVaga(i) {
-  const job = allJobs[i];
-  if (!job || job.analise) return;
+async function analyze(i){
+  const job=jobs[i];if(!job||job.analise)return;
+  const btn=document.getElementById('ba'+i);
+  if(btn){btn.disabled=true;btn.textContent='Analisando...';}
+  try{
+    const res=await fetch('/api/cv-analyze-job.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({job,cvText})});
+    const d=await res.json();
+    if(d.error)throw new Error(d.error);
+    jobs[i]={...job,analise:d.analise};
+    setStep(4);renderJobs();
+    setTimeout(()=>{const jd=document.getElementById('jd'+i),jc=document.getElementById('jc'+i);if(jd&&jc){jd.style.display='block';jc.classList.add('open');}},50);
+  }catch(e){if(btn){btn.disabled=false;btn.textContent='Analisar';}alert('Erro: '+e.message);}
+}
 
-  const btn = document.getElementById('btn-analyze-' + i);
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Analisando...'; }
+function goTo(id,n){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  setStep(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-  try {
-    const res = await fetch('/api/cv-analyze-job.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ job, cvText })
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-
-    allJobs[i] = { ...job, analise: data.analise };
-    setStep(4);
-    renderJobs();
-
-    setTimeout(() => {
-      const detail = document.getElementById('detail-' + i);
-      const card = document.getElementById('card-' + i);
-      if (detail && card) { detail.style.display = 'block'; card.classList.add('expanded'); }
-    }, 50);
-  } catch(e) {
-    if (btn) { btn.disabled = false; btn.textContent = '🤖 Analisar'; }
-    alert('Erro: ' + e.message);
+function setStep(n){
+  for(let i=1;i<=4;i++){
+    const el=document.getElementById('s'+i);
+    el.classList.remove('on','done');
+    if(i<n)el.classList.add('done');
+    if(i===n)el.classList.add('on');
   }
 }
-
-// --- NAVIGATION ---
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function setStep(n) {
-  for (let i = 1; i <= 4; i++) {
-    const el = document.getElementById('step' + i);
-    el.classList.remove('active', 'done');
-    if (i < n) el.classList.add('done');
-    if (i === n) el.classList.add('active');
-  }
-}
-
-function voltarUpload() {
-  showSection('sec-upload');
-  setStep(1);
-}
-
-function voltarSugestoes() {
-  showSection('sec-suggestions');
-  setStep(2);
-}
-
-// Drag and drop
-const uploadArea = document.getElementById('upload-area');
-uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
-uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
-uploadArea.addEventListener('drop', (e) => {
-  e.preventDefault();
-  uploadArea.classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (file) {
-    document.getElementById('cv-file').files = e.dataTransfer.files;
-    handleFile({ target: { files: [file] } });
-  }
-});
 </script>
 </body>
 </html>
