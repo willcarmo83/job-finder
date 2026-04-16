@@ -916,41 +916,28 @@ function handleFile(e) {
 }
 
 async function readPDF(file) {
-  // Read PDF as base64 and extract text via Claude
   const reader = new FileReader();
   reader.onload = async (ev) => {
     const base64 = ev.target.result.split(',')[1];
-    document.getElementById('btn-analyze-cv').textContent = '⏳ Lendo PDF...';
+    document.getElementById('btn-analyze-cv').innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;margin:0"></span> Lendo PDF...';
     document.getElementById('btn-analyze-cv').disabled = true;
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/cv-read-pdf.js', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 2000,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
-              { type: 'text', text: 'Extract and return the full text content of this CV/resume. Return only the text, no commentary.' }
-            ]
-          }]
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64, mediaType: 'application/pdf' })
       });
 
       const data = await res.json();
-      cvText = data.content?.[0]?.text || '';
+      if (data.error) throw new Error(data.error);
+      cvText = data.text || '';
       document.getElementById('cv-text').value = cvText;
     } catch(e) {
-      alert('Erro ao ler PDF. Tente colar o texto manualmente.');
+      alert('Erro ao ler PDF: ' + e.message + '\nTente colar o texto manualmente.');
     }
 
-    document.getElementById('btn-analyze-cv').textContent = '✨ Analisar meu perfil';
+    document.getElementById('btn-analyze-cv').innerHTML = '<span>✨</span> Analisar meu perfil';
     document.getElementById('btn-analyze-cv').disabled = false;
   };
   reader.readAsDataURL(file);
@@ -1260,4 +1247,3 @@ uploadArea.addEventListener('drop', (e) => {
 </script>
 </body>
 </html>
-
