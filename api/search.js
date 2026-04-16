@@ -5,17 +5,14 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const serpKey = process.env.SERP_API_KEY;
-  const { type = 'internacional', chips = '' } = req.query;
+  const { type = 'internacional' } = req.query;
 
   try {
     let url;
     if (type === 'brasil') {
-      // Brasil: busca em português, sem filtro ltype, sem chips de data que podem quebrar
-      url = `https://serpapi.com/search?engine=google_jobs&q=product+manager+remoto&hl=pt-br&gl=br&api_key=${serpKey}`;
+      url = `https://serpapi.com/search?engine=google_jobs&q=product+manager+brasil&hl=en&gl=br&api_key=${serpKey}`;
     } else {
-      // Internacional: com filtro remote e chips
-      const chipsParam = chips ? `&chips=${encodeURIComponent(chips)}` : '';
-      url = `https://serpapi.com/search?engine=google_jobs&q=product+manager+remote&ltype=1&hl=en${chipsParam}&api_key=${serpKey}`;
+      url = `https://serpapi.com/search?engine=google_jobs&q=product+manager+remote&ltype=1&hl=en&api_key=${serpKey}`;
     }
 
     const r = await fetch(url);
